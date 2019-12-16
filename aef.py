@@ -15,18 +15,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 from random import randint
 
-
 class AefSpider(scrapy.Spider):
 	name = 'aef'
 	allowed_domains = ['aef.cci.fr']
+	#the start link
 	start_urls = ['http://aef.cci.fr/']
 	
+	#Importing the driver for selemium use.
 	global chromedriver
 	chromedriver = webdriver.Chrome(executable_path = 'C:\ProgramData\chromedriver')
 	
 	global start
 	start = time.time()
 
+	# get the information on where to start the scraping like in page '6' on department '01' in name 'Piter'
 	def __init__(self):
 		global input_name
 		global input_dep
@@ -49,9 +51,11 @@ class AefSpider(scrapy.Spider):
 		global input_name
 		global input_dep
 		global input_page
+		# open the txt file that contains all the names 
 		with open("prenom.txt", 'r+') as names:
 			deps = 96
 			page = None
+			#if the input is yes start with the specific name, department and page.
 			if quest == "y" or quest == "Y":
 				s_dep = int(input_dep)
 				input_page = int(input_page)
@@ -71,6 +75,7 @@ class AefSpider(scrapy.Spider):
 
 						for item in items:
 							yield item
+			#otherwise start from the beginning.
 			else:
 				s_dep = 1
 				for name in names:
@@ -159,6 +164,7 @@ class AefSpider(scrapy.Spider):
 						chromedriver, result_get_last = lib_scrapy().driver_get(chromedriver, url)
 		return items
 
+	#extracting all the data from the html
 	def parse_items(self, sel):
 		try:	
 			# ----------IDENTITÉ------------------
